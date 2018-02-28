@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<script>
+    function generateDates() {
+        /*  Please complete your code here and do not change the html template below.
+            You can use any third party calendar libraries if necessary.
+            But please do not use any date picker plugin.
+        */
+		//Elements
+		let datesContainer = document.getElementById("dates");
+		let beginDateEl = document.getElementById("begin-date");
+		let endDateEl = document.getElementById("end-date");
+		let mondayCheckboxEl = document.getElementById("monday");
+		let tuesdayCheckboxEl = document.getElementById("tuesday");
+		let wednesdayCheckboxEl = document.getElementById("wednesday");
+		let thursdayCheckboxEl = document.getElementById("thursday");
+		let fridayCheckboxEl = document.getElementById("friday");
+		let saturdayCheckboxEl = document.getElementById("saturday");
+		let sundayCheckboxEl = document.getElementById("sunday");
+		
+		//Values
+		let beginDateVal = beginDateEl && beginDateEl.value;
+		let endDateVal = endDateEl && endDateEl.value;
+		let mondayChecked = mondayCheckboxEl && mondayCheckboxEl.checked;
+		let tuesdayChecked = tuesdayCheckboxEl && tuesdayCheckboxEl.checked;
+		let wednesdayChecked = wednesdayCheckboxEl && wednesdayCheckboxEl.checked;
+		let thursdayChecked = thursdayCheckboxEl && thursdayCheckboxEl.checked;
+		let fridayChecked = fridayCheckboxEl && fridayCheckboxEl.checked;
+		let saturdayChecked = saturdayCheckboxEl && saturdayCheckboxEl.checked;
+		let sundayChecked = sundayCheckboxEl && sundayCheckboxEl.checked;
+		
+		datesContainer.innerHTML = "";
+		
+		//Validate Form
+		let datePat = /^(\d{4}|\d{4})(\d{2,2})(\d{2,2})$/;
+		let beginDateValArr = beginDateVal.match(datePat);
+		let endDateValArr = endDateVal.match(datePat);
+		if(beginDateVal && endDateVal && beginDateValArr && endDateValArr && (mondayChecked || tuesdayChecked || wednesdayChecked || thursdayChecked || fridayChecked || saturdayChecked || sundayChecked)) {
+			//Convert Date String to Date Object
+			let convertedbeginDate = new Date(beginDateValArr[2] + '/' + beginDateValArr[3] + '/' + beginDateValArr[1]);
+			let convertedendDate = new Date(endDateValArr[2] + '/' + endDateValArr[3] + '/' + endDateValArr[1]);
+			
+			//Validate Date Range
+			if(convertedendDate.getTime() > convertedbeginDate.getTime()) {
+				//Create UL Element
+				let ulEl = document.createElement('ul');
+				
+				//Loop through date range
+				for (; convertedbeginDate <= convertedendDate; convertedbeginDate.setDate(convertedbeginDate.getDate() + 1)) {
+					//Get day of convertedbeginDate
+					let currentDay = convertedbeginDate.getDay();
+					
+					//Ensure currentDay matches checkbox preferences
+					if((currentDay == 0 && sundayChecked) || (currentDay == 1 && mondayChecked) || (currentDay == 2 && tuesdayChecked) || (currentDay == 3 && wednesdayChecked) || (currentDay == 4 && thursdayChecked) || (currentDay == 5 && fridayChecked) || (currentDay == 6 && saturdayChecked)) {
+						//Create LI elements and append to UL Element
+						let liEl = document.createElement('li');
+						liEl.innerHTML = convertedbeginDate.yyyymmdd() + '<input type="button" value="Remove" onClick="removeElement(this);">';
+						ulEl.appendChild(liEl);
+					}
+				}
+				
+				//Append UL Element to Dates Container Element
+				datesContainer.appendChild(ulEl);
+				
+				//Reset Form
+				/*
+				beginDateEl.value = "";
+				endDateEl.value = "";
+				mondayCheckboxEl.checked = false;
+				tuesdayCheckboxEl.checked = false;
+				wednesdayCheckboxEl.checked = false;
+				thursdayCheckboxEl.checked = false;
+				fridayCheckboxEl.checked = false;
+				saturdayCheckboxEl.checked = false;
+				sundayCheckboxEl.checked = false;
+				*/
+			}
+			else {
+				datesContainer.innerHTML = "Form not valid";
+			}
+		}
+		else {
+			datesContainer.innerHTML = "Form not valid";
+		}
+    }
+	function removeElement(element) {
+		// Removes an element from the document
+		element.parentNode.remove();
+	}
+	Date.prototype.yyyymmdd = function() {
+	  var mm = this.getMonth() + 1; // getMonth() is zero-based
+	  var dd = this.getDate();
+
+	  return [this.getFullYear(),
+			  (mm>9 ? '' : '0') + mm,
+			  (dd>9 ? '' : '0') + dd
+			 ].join('');
+	};
+</script>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dynamic Dates</title>
+  </head>
+  <body>
+    <h2>Specify Date Range</h2>
+    Begin Date (YYYYMMDD): <input type="text" id="begin-date"></input>
+    <br><br>
+    End Date (YYYYMMDD): <input type="text" id="end-date"></input>
+    <br><br>
+    <input type="checkbox" id="monday"> </input><label for="monday">Monday</label>
+    <input type="checkbox" id="tuesday"> </input><label for="tuesday">Tuesday</label>
+    <input type="checkbox" id="wednesday"> </input><label for="wednesday">Wednesday</label>
+    <input type="checkbox" id="thursday"> </input><label for="thursday">Thursday</label>
+    <input type="checkbox" id="friday"> </input><label for="friday">Friday</label>
+    <input type="checkbox" id="saturday"> </input><label for="saturday">Saturday</label>
+    <input type="checkbox" id="sunday"> </input><label for="sunday">Sunday</label>
+    <br><br>
+    <input type="submit" value="Generate" onclick="generateDates()">
+    <ul id="dates">
+        <!--
+            Do not edit this section. Dates should be inserted dynamically
+        -->
+    </ul>
+  </body>
+</html>
