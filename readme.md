@@ -1,1 +1,1 @@
-Live Website: http://zackhonig.com/projects/date-generator
+Live Website: http://zackhonig.com/projects/Date-Generator
